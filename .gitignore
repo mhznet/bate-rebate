@@ -1,0 +1,38 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+*.meta
+*.TMP
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+#Unity Files Project
+*.unityproj
+
+#Visual Studio
+*csproj
+*sln
+*suo
+
+#Folders
+Temp/
+bin/
+obj/
+Library/

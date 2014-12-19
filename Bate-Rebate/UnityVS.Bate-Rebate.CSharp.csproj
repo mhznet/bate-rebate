@@ -22,7 +22,7 @@
     <OutputPath>Temp\UnityVS_bin\Debug\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DEBUG;TRACE;UNITY_4_6_0;UNITY_4_6;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_4_6_FEATURES;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_4_6_1;UNITY_4_6;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_4_6_FEATURES;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <OutputPath>Temp\UnityVS_bin\Release\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>TRACE;UNITY_4_6_0;UNITY_4_6;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_4_6_FEATURES;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
+    <DefineConstants>TRACE;UNITY_4_6_1;UNITY_4_6;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_4_6_FEATURES;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -50,16 +50,68 @@
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="SignalsCSharp">
+      <HintPath>Assets\AquelaFrameWork\SignalsCSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SignalsCSharp">
       <HintPath>Assets\Plugins\SignalsCSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AquelaFrameWork\Components\AFBoxColider2DResizer.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\AFComponent.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\AFEngine.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\AFObject.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\ASingleton.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\Asset\AFAssetManager.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\Asset\AFPool.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\Asset\AFTextureAtlas.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\Asset\AFTextureInfo.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\Asset\AFTexturePackerProperties.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\Entity.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\Factory\IStateFactory.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\Factory\StateFactory.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\IDisposeble.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\State\AFDefaultStateTransition.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\State\AFSingleTransition.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\State\AFStateManager.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\State\AState.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\State\AStateManager.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\State\IState.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Core\State\IStateTransition.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Debug\AFDebug.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Debug\AFDebugCanvas.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Debug\AFDebugSettings.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Debug\AFDebugViewPositionHandler.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Debug\AFLogFileWriter.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Input\AFInput.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Input\AFInputAction.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Input\AFInputController.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Sound\AFSound.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Sound\AFSoundGroup.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Sound\AFSoundManager.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Sound\AFSoundSequence.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Utils\AFCSVHelper.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Utils\CryptoUtil.cs" />
+    <Compile Include="Assets\AquelaFrameWork\Utils\Utility.cs" />
+    <Compile Include="Assets\AquelaFrameWork\View\AFMovieClip.cs" />
+    <Compile Include="Assets\AquelaFrameWork\View\AFSprite.cs" />
+    <Compile Include="Assets\AquelaFrameWork\View\AFSpriteHandler.cs" />
+    <Compile Include="Assets\AquelaFrameWork\View\AFSpriteRenderer.cs" />
+    <Compile Include="Assets\AquelaFrameWork\View\AFStatesController.cs" />
+    <Compile Include="Assets\AquelaFrameWork\View\AMovieClip.cs" />
+    <Compile Include="Assets\AquelaFrameWork\View\CanvasImageLoaderByResolution.cs" />
+    <Compile Include="Assets\AquelaFrameWork\View\IAnimatable.cs" />
+    <Compile Include="Assets\AquelaFrameWork\View\ISpriteContainer.cs" />
     <Compile Include="Assets\BateScripts\BateGame\BallBehaviour.cs" />
     <Compile Include="Assets\BateScripts\BateGame\PaddleBehaviour.cs" />
+    <Compile Include="Assets\BateScripts\BateGameState.cs" />
     <Compile Include="Assets\BateScripts\BateMain.cs" />
+    <Compile Include="Assets\BateScripts\BateMenuState.cs" />
+    <Compile Include="Assets\BateScripts\BateStateFactory.cs" />
     <Compile Include="Assets\BateScripts\SceneManagers\BateGameManager.cs" />
     <Compile Include="Assets\BateScripts\SceneManagers\BateMenuManager.cs" />
     <Compile Include="Assets\BateScripts\SceneManagers\BateSelectionManager.cs" />
+    <None Include="Assets\AquelaFrameWork\SignalsCSharp.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>
