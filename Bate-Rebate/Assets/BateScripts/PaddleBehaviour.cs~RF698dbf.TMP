@@ -1,0 +1,88 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class PaddleBehaviour : MonoBehaviour 
+{
+    public bool enableTouch = true;
+    public float speed = 15f;
+    public GameObject paddleAsset;
+    public GameObject ball;
+    private bool isDragging = false;
+    
+    void Start() { }
+    void Update() { }
+    void OnMouseUp()
+    {
+        isDragging = false;
+    }
+    void OnMouseDown()
+    {
+        isDragging = true;
+    }
+    void FixedUpdate()
+    {
+        if (enableTouch)
+        {
+            if (isDragging)
+            {
+                var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                mousePos.z = this.paddleAsset.transform.position.z;
+                mousePos.x = this.paddleAsset.transform.position.x;
+                this.paddleAsset.transform.position = Vector3.MoveTowards(this.paddleAsset.transform.position, mousePos, speed * Time.deltaTime);
+            }
+        }
+        else
+        {
+            var posVec = ball.transform.position;
+            posVec.z = this.paddleAsset.transform.position.z;
+            posVec.x = this.paddleAsset.transform.position.x;
+            this.paddleAsset.transform.position = Vector3.MoveTowards(this.paddleAsset.transform.position, posVec, speed * Time.deltaTime);
+        }
+    }
+    private void coment()
+    {
+        //IA;
+        Debug.Log("IA!");
+        float ballSpeed = ball.GetComponent<BallBehaviour>().speed;
+        float ballRad = ball.GetComponent<CircleCollider2D>().radius;
+        Vector3 ballPos = ball.transform.position;
+
+        Vector3 padPos = paddleAsset.transform.position;
+        Vector2 padSize = paddleAsset.GetComponent<BoxCollider2D>().size;
+
+        if (padPos.x < 0 && ballSpeed < 0 || padPos.x > 0 && ballSpeed > 0)
+        {
+            float padBottom = padPos.y - padSize.y * 0.5f;
+            float padTop = padPos.y + padSize.y * 0.5f;
+            float nextBallTop = ballPos.y + ballRad * 0.5f + ballSpeed;
+            float nextBallBottom = ballPos.y - ballRad * 0.5f + ballSpeed;
+
+            if (nextBallTop < padBottom || nextBallBottom > padTop)
+            {
+                if (ballPos.y - ballSpeed * 1.5f < padPos.y)
+                {
+                    //MoveSouth;
+                    paddleAsset.transform.position -= new Vector3(0.0f, speed);
+                }
+                else if (ballPos.y + ballSpeed * 1.5f > padPos.y)
+                {
+                    //MoveNorth;
+                    paddleAsset.transform.position += new Vector3(0.0f, speed);
+                }
+            }
+        }
+        else
+        {
+            if (padPos.y > 0f + padSize.y * 0.5f)
+            {
+                //MoveSouth;
+                paddleAsset.transform.position -= new Vector3(0.0f, speed);
+            }
+            else if (padPos.y < 0f - padSize.y * 0.5f)
+            {
+                //MoveNorth;
+                paddleAsset.transform.position += new Vector3(0.0f, speed);
+            }
+        }
+    }
+}

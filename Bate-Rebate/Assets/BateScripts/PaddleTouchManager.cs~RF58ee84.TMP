@@ -1,0 +1,70 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class PaddleTouchManager : MonoBehaviour 
+{
+    public bool enableTouch = true;
+    public float speed = 15f;
+    public GameObject paddleAsset;
+    public GameObject ball;
+    private bool isDragging = false;
+    
+    void Start() { }
+    void Update() { }
+    void OnMouseUp()
+    {
+        isDragging = false;
+    }
+    void OnMouseDown()
+    {
+        isDragging = true;
+    }
+    void FixedUpdate()
+    {
+        if (enableTouch)
+        {
+            if (isDragging)
+            {
+                var posVec = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                posVec.z = this.paddleAsset.transform.position.z;
+                posVec.x = this.paddleAsset.transform.position.x;
+                this.paddleAsset.transform.position = Vector3.MoveTowards(this.paddleAsset.transform.position, posVec, speed * Time.deltaTime);
+            }
+        }
+        else
+        {
+            //IA;
+            float ballSpeed = ball.GetComponent<BallBehaviour>().speed;
+            float ballRad = ball.GetComponent<CircleCollider2D>().radius;
+            Vector3 ballPos = ball.transform.position;
+
+            Vector3 padPos = paddleAsset.transform.position;
+            Vector2 padSize = paddleAsset.GetComponent<BoxCollider2D>().size;
+
+            if (padPos.x < 0 && ballSpeed < 0 || padPos.x > 0 && ballSpeed > 0)
+            {
+                float padBottom = padPos.y - padSize.y * 0.5f;
+                float padTop = padPos.y + padSize.y * 0.5f;
+                float nextBallTop = ballPos.y + ballRad * 0.5f + ballSpeed;
+                float nextBallBottom = ballPos.y - ballRad * 0.5f + ballSpeed;
+
+                if (nextBallTop < padBottom || nextBallBottom > padTop)
+                {
+                    if (ballPos.y - ballSpeed * 1.5f < padPos.y)
+                    {
+
+                        //MoveSouth(node.paddle);
+                    }
+                    else if (ball._position.y + ball._speed.y * 1.5f > paddle._position.y)
+                    {
+                        MoveNorth(node.paddle);
+                    }
+                }
+            }
+            else
+            {
+                MoveTowardsTheCenter(node.paddle);
+            }
+        }
+    }
+}
