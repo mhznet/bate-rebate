@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-using UnityEngine;
 using AquelaFrameWork.Core;
 using AquelaFrameWork.Core.Factory;
 using AquelaFrameWork.Core.State;
@@ -16,10 +15,10 @@ namespace BateRebate
             {
                 case AState.EGameState.MENU:
                     return AFObject.Create<BateMenuState>();
-                case AState.EGameState.GAME:
-                    return AFObject.Create<BateGameState>();
                 case AState.EGameState.SELECTION:
                     return AFObject.Create<BateSelectionState>();
+                case AState.EGameState.GAME:
+                    return AFObject.Create<BateGameState>();
             }
             return null;
         }

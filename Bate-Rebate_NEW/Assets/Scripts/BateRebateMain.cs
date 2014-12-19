@@ -21,6 +21,11 @@ namespace BateRebate
             //sr.transform.localScale = new Vector3(1, 1, 1);
             //m_stateManager.AddTransition(tras);
             //m_stateManager.GotoState(AState.EGameState.MENU);
+
+            //BateRebateMain.Instance.GetStateManger().GotoState(AState.EGameState.MENU);
+            //BateRebateMain.Instance.GetStateManger().GotoState(AState.EGameState.SELECTION);
+            BateRebateMain.Instance.GetStateManger().GotoState(AState.EGameState.GAME);
+
             base.Initialize();
         }
     }

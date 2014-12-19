@@ -18,6 +18,7 @@ namespace BateRebate
         private string p1AssetUrl = "Scenes/Selection/p1";
         private string p2AssetUrl = "Scenes/Selection/p2";
 
+        private GameObject m_selectionScene;
         private BateController main;
         private GameObject background;
         private GameObject btP1;
@@ -25,27 +26,39 @@ namespace BateRebate
 
         protected override void Awake()
         {
-            m_stateID = 0;
+            m_stateID = EGameState.SELECTION;
         }
 
         public override void BuildState()
         {
+            m_selectionScene = Resources.Load<GameObject>("preFabs/PreFabSelectionScene");
+            Instantiate(m_selectionScene);
+
             main = BateController.Instance;
 
             background = GameObject.Find("BG");
             bgAssetUrl = main.AddPlatformAndQualityToUrl(bgAssetUrl);
             background.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(bgAssetUrl)) as Sprite;
-            Add(background);
+            background.GetComponent<Image>().SetNativeSize();
+            background.GetComponent<Image>().preserveAspect = true;
 
             btP1 = GameObject.Find("onePBtn");
             p1AssetUrl = main.AddPlatformAndQualityToUrl(p1AssetUrl);
             btP1.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(p1AssetUrl)) as Sprite;
             btP1.GetComponent<Button>().onClick.AddListener(OnClickP1);
+            btP1.GetComponent<Image>().SetNativeSize();
+            btP1.GetComponent<Image>().preserveAspect = true;
 
             btP2 = GameObject.Find("twoPBtn");
             p2AssetUrl = main.AddPlatformAndQualityToUrl(p2AssetUrl);
             btP2.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(p2AssetUrl)) as Sprite;
             btP2.GetComponent<Button>().onClick.AddListener(OnClickP2);
+            btP2.GetComponent<Image>().SetNativeSize();
+            btP2.GetComponent<Image>().preserveAspect = true;
+
+            /*Add(background);
+            Add(btP1);
+            Add(btP2);*/
 
             base.BuildState();
         }

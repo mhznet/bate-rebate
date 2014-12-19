@@ -23,6 +23,7 @@ namespace BateRebate
         private GameObject btJogar;
         private GameObject btVoltar;
 
+        private bool classicLoad = false;
         private BateController main;
 
         protected override void Awake()
@@ -33,35 +34,62 @@ namespace BateRebate
         public override void BuildState()
         {
             main = BateController.Instance;
-
-            m_menuScene = Instantiate(AFAssetManager.Instance.Load<GameObject>("preFabs/Canvas")) as GameObject;
-
+            
             bgAssetUrl = main.AddPlatformAndQualityToUrl(bgAssetUrl);
             titleAssetUrl = main.AddPlatformAndQualityToUrl(titleAssetUrl);
             btJogarAssetUrl = main.AddPlatformAndQualityToUrl(btJogarAssetUrl);
             btVoltarAssetUrl = main.AddPlatformAndQualityToUrl(btVoltarAssetUrl);
+            
+            /*PQ NÂO FUNCIONA? Favor avisar o motivo*/
+            //m_menuScene = Instantiate(AFAssetManager.Instance.Load<GameObject>("preFabs/PreFabMenuScene")) as GameObject;
+            m_menuScene = Resources.Load<GameObject>("preFabs/PreFabMenuScene");
+            Instantiate(m_menuScene);
 
             background = GameObject.Find("menuBg");
             backgroundTitle = GameObject.Find("menuTitle");
             btJogar = GameObject.Find("menuBtJogar");
             btVoltar = GameObject.Find("menuBtVoltar");
+            
+            background.transform.localScale = Vector3.one;
+            backgroundTitle.transform.localScale = Vector3.one;
+            btJogar.transform.localScale = Vector3.one;
+            btVoltar.transform.localScale = Vector3.one;
 
-            background.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(bgAssetUrl)) as Sprite;
-            Add(background);
-            backgroundTitle.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(titleAssetUrl)) as Sprite;
-            Add(backgroundTitle);
-            btJogar.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(btJogarAssetUrl)) as Sprite;
+            /*Aqui esta dando erro ao usar o carregamento da AFW*/
+            if (!classicLoad)
+            {
+                background.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(bgAssetUrl)) as Sprite;
+                background.GetComponent<Image>().SetNativeSize();
+                background.GetComponent<Image>().preserveAspect = true;
+
+                backgroundTitle.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(titleAssetUrl)) as Sprite;
+                backgroundTitle.GetComponent<Image>().SetNativeSize();
+                backgroundTitle.GetComponent<Image>().preserveAspect = true;
+
+                btJogar.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(btJogarAssetUrl)) as Sprite;
+                btJogar.GetComponent<Image>().SetNativeSize();
+                btJogar.GetComponent<Image>().preserveAspect = true;
+
+                btVoltar.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(btVoltarAssetUrl)) as Sprite;
+                btVoltar.GetComponent<Image>().SetNativeSize();
+                btVoltar.GetComponent<Image>().preserveAspect = true;
+            }
+            else
+            {
+                background.GetComponent<Image>().sprite = Resources.Load<Sprite>(bgAssetUrl);
+                backgroundTitle.GetComponent<Image>().sprite = Resources.Load<Sprite>(titleAssetUrl);
+                btJogar.GetComponent<Image>().sprite = Resources.Load<Sprite>(btJogarAssetUrl);
+                btVoltar.GetComponent<Image>().sprite = Resources.Load<Sprite>(btVoltarAssetUrl);
+            }
+
             btJogar.GetComponent<Button>().onClick.AddListener(OnBtJogarClick);
-            Add(btJogar);
-            btVoltar.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(btVoltarAssetUrl)) as Sprite;
             btVoltar.GetComponent<Button>().onClick.AddListener(OnBtVoltarClick);
-            Add(btVoltar);
 
+            /*Add(background);
+            Add(backgroundTitle);
+            Add(btJogar);
+            Add(btVoltar);*/
             base.BuildState();
-        }
-        public override void AFUpdate(double deltaTime)
-        {
-            base.AFUpdate(deltaTime);
         }
         private void OnBtJogarClick()
         {

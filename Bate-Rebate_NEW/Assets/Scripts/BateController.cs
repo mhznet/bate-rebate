@@ -8,13 +8,11 @@ namespace BateRebate
 {
     public class BateController : ASingleton<BateController>
     {
-        private bool menuOk     = false;
-        private bool selectionOk= false;
-        private bool gameOk     = false;
         public int PlayerNumber { get; set; }
         public void GoToMenu()
         {
             BateRebateMain.Instance.GetStateManger().GotoState(AState.EGameState.MENU);
+
         }
         public void GoToSelection()
         {
