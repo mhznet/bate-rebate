@@ -11,10 +11,8 @@ public class BallBehaviour : MonoBehaviour {
 
     public int pointsLeft = 0;
     public int pointsRight = 0;
-    public GameObject scoreLeftShadow;
     public GameObject scoreLeftOver;
     public GameObject scoreRightOver;
-    public GameObject scoreRightShadow;
 
     public bool paused = false;
     private Vector2 lastVelocity;
@@ -39,13 +37,11 @@ public class BallBehaviour : MonoBehaviour {
         {
             pointsLeft++;
             this.scoreLeftOver.GetComponent<Text>().text = pointsLeft.ToString();
-            this.scoreLeftShadow.GetComponent<Text>().text = pointsLeft.ToString();
         }
         else if (player == 2)
         {
             pointsRight++;
             this.scoreRightOver.GetComponent<Text>().text = pointsRight.ToString();
-            this.scoreRightShadow.GetComponent<Text>().text = pointsRight.ToString();
         }
     }
     public void Pause()

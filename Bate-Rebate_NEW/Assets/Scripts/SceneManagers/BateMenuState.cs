@@ -8,67 +8,68 @@ using AquelaFrameWork.Core.Asset;
 using AquelaFrameWork.Core.Factory;
 using AquelaFrameWork.Core.State;
 
-public class BateMenuState : AState 
+namespace BateRebate
 {
-    private string bgAssetUrl = "Scenes/Menu/tela-inicio";
-    private string titleAssetUrl = "Scenes/Menu/tela-inicioOver";
-    private string btJogarAssetUrl = "Scenes/Menu/telainicioJogar";
-    private string btVoltarAssetUrl = "Scenes/Menu/telainicioVoltar";
-
-    private GameObject m_menuScene;
-    private GameObject background;
-    private GameObject backgroundTitle;
-    private GameObject btJogar;
-    private GameObject btVoltar;
-    private GameObject m_canvas;
-
-    private BateMain main;
-
-    protected override void Awake()
+    public class BateMenuState : AState
     {
-        m_stateID = EGameState.MENU;
+        private string bgAssetUrl = "Scenes/Menu/tela-inicio";
+        private string titleAssetUrl = "Scenes/Menu/tela-inicioOver";
+        private string btJogarAssetUrl = "Scenes/Menu/telainicioJogar";
+        private string btVoltarAssetUrl = "Scenes/Menu/telainicioVoltar";
+
+        private GameObject m_menuScene;
+        private GameObject background;
+        private GameObject backgroundTitle;
+        private GameObject btJogar;
+        private GameObject btVoltar;
+
+        private BateController main;
+
+        protected override void Awake()
+        {
+            m_stateID = EGameState.MENU;
+        }
+
+        public override void BuildState()
+        {
+            main = BateController.Instance;
+
+            m_menuScene = Instantiate(AFAssetManager.Instance.Load<GameObject>("preFabs/Canvas")) as GameObject;
+
+            bgAssetUrl = main.AddPlatformAndQualityToUrl(bgAssetUrl);
+            titleAssetUrl = main.AddPlatformAndQualityToUrl(titleAssetUrl);
+            btJogarAssetUrl = main.AddPlatformAndQualityToUrl(btJogarAssetUrl);
+            btVoltarAssetUrl = main.AddPlatformAndQualityToUrl(btVoltarAssetUrl);
+
+            background = GameObject.Find("menuBg");
+            backgroundTitle = GameObject.Find("menuTitle");
+            btJogar = GameObject.Find("menuBtJogar");
+            btVoltar = GameObject.Find("menuBtVoltar");
+
+            background.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(bgAssetUrl)) as Sprite;
+            Add(background);
+            backgroundTitle.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(titleAssetUrl)) as Sprite;
+            Add(backgroundTitle);
+            btJogar.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(btJogarAssetUrl)) as Sprite;
+            btJogar.GetComponent<Button>().onClick.AddListener(OnBtJogarClick);
+            Add(btJogar);
+            btVoltar.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(btVoltarAssetUrl)) as Sprite;
+            btVoltar.GetComponent<Button>().onClick.AddListener(OnBtVoltarClick);
+            Add(btVoltar);
+
+            base.BuildState();
+        }
+        public override void AFUpdate(double deltaTime)
+        {
+            base.AFUpdate(deltaTime);
+        }
+        private void OnBtJogarClick()
+        {
+            main.GoToSelection();
+        }
+        private void OnBtVoltarClick()
+        {
+            main.QuitGame();
+        }
     }
-
-    public override void BuildState()
-    {
-        main = BateMain.Instance;
-
-        m_menuScene = Instantiate(AFAssetManager.Instance.Load<GameObject>("preFabs/Canvas")) as GameObject;
-
-        //Completement the URL
-        bgAssetUrl = main.AddPlatformAndQualityToUrl(bgAssetUrl);
-        titleAssetUrl = main.AddPlatformAndQualityToUrl(titleAssetUrl);
-        btJogarAssetUrl = main.AddPlatformAndQualityToUrl(btJogarAssetUrl);
-        btVoltarAssetUrl = main.AddPlatformAndQualityToUrl(btVoltarAssetUrl);
-
-        //Get The Scene Obj
-        background = GameObject.Find("menuBg");
-        backgroundTitle = GameObject.Find("menuTitle");
-        btJogar = GameObject.Find("menuBtJogar");
-        btVoltar = GameObject.Find("menuBtVoltar");
-
-        background.GetComponent<Image>().sprite = Resources.Load<Sprite>(bgAssetUrl);
-        backgroundTitle.GetComponent<Image>().sprite = Resources.Load<Sprite>(titleAssetUrl);
-        btJogar.GetComponent<Image>().sprite = Resources.Load<Sprite>(btJogarAssetUrl);
-        btJogar.GetComponent<Button>().onClick.AddListener(OnBtJogarClick);
-        btVoltar.GetComponent<Image>().sprite = Resources.Load<Sprite>(btVoltarAssetUrl);
-        btVoltar.GetComponent<Button>().onClick.AddListener(OnBtVoltarClick);
-
-        base.BuildState();
-    }
-
-    public override void AFUpdate(double deltaTime)
-    {
-        base.AFUpdate(deltaTime);
-    }
-
-    private void OnBtJogarClick()
-    {
-        main.GoToSelection();
-    }
-    private void OnBtVoltarClick()
-    {
-        main.QuitGame();
-    }
-
 }

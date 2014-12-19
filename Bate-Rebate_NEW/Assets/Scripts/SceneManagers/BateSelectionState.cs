@@ -7,70 +7,57 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using AquelaFrameWork.Core;
+using AquelaFrameWork.Core.Asset;
 using AquelaFrameWork.Core.State;
 
-public class BateSelectionState : AState
+namespace BateRebate
 {
-    private string bgAssetUrl = "Scenes/Selection/bg";
-    private string p1AssetUrl = "Scenes/Selection/p1";
-    private string p2AssetUrl = "Scenes/Selection/p2";
-
-    private BateMain main;
-    private GameObject background;
-    private GameObject btP1;
-    private GameObject btP2;
-
-    protected override void Awake()
+    public class BateSelectionState : AState
     {
-        m_stateID = 0;
-    }
+        private string bgAssetUrl = "Scenes/Selection/bg";
+        private string p1AssetUrl = "Scenes/Selection/p1";
+        private string p2AssetUrl = "Scenes/Selection/p2";
 
-    public override void BuildState()
-    {
-        main = BateMain.Instance;
+        private BateController main;
+        private GameObject background;
+        private GameObject btP1;
+        private GameObject btP2;
 
-//         main = masterclass;
-//         main.Trace("Selection Manager: StartScene!");
-// 
-//         background = GameObject.Find("BG");
-//         bgAssetUrl = main.AddPlatformAndQualityToUrl(bgAssetUrl);
-//         background.GetComponent<Image>().sprite = Resources.Load<Sprite>(bgAssetUrl);
-//         background.transform.SetParent(main.uiCanvas.transform);
-// 
-//         btP1 = GameObject.Find("onePBtn");
-//         p1AssetUrl = main.AddPlatformAndQualityToUrl(p1AssetUrl);
-//         btP1.GetComponent<Image>().sprite = Resources.Load<Sprite>(p1AssetUrl);
-//         btP1.GetComponent<Button>().onClick.AddListener(OnClickP1);
-//         btP1.transform.SetParent(main.uiCanvas.transform);
-//         
-//         btP2 = GameObject.Find("twoPBtn");
-//         p2AssetUrl = main.AddPlatformAndQualityToUrl(p2AssetUrl);
-//         btP2.GetComponent<Image>().sprite = Resources.Load<Sprite>(p2AssetUrl);
-//         btP2.GetComponent<Button>().onClick.AddListener(OnClickP2);
-//         btP2.transform.SetParent(main.uiCanvas.transform);
+        protected override void Awake()
+        {
+            m_stateID = 0;
+        }
 
-        base.BuildState();
-    }
+        public override void BuildState()
+        {
+            main = BateController.Instance;
 
+            background = GameObject.Find("BG");
+            bgAssetUrl = main.AddPlatformAndQualityToUrl(bgAssetUrl);
+            background.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(bgAssetUrl)) as Sprite;
+            Add(background);
 
-    public void GetReadyToDestroy()
-    {
-        background.SetActive(false);
-        btP1.SetActive(false);
-        btP2.SetActive(false);
-        /*Destroy(background);
-        Destroy(btP1);
-        Destroy(btP2);*/
-        /*background.transform.SetParent(main.selectionScene.transform);
-        btP2.transform.SetParent(main.selectionScene.transform);
-        btP1.transform.SetParent(main.selectionScene.transform);*/
-    }
-    private void OnClickP1()
-    {
-        main.GoToGame(1);
-    }
-    private void OnClickP2()
-    {
-        main.GoToGame(2);
+            btP1 = GameObject.Find("onePBtn");
+            p1AssetUrl = main.AddPlatformAndQualityToUrl(p1AssetUrl);
+            btP1.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(p1AssetUrl)) as Sprite;
+            btP1.GetComponent<Button>().onClick.AddListener(OnClickP1);
+
+            btP2 = GameObject.Find("twoPBtn");
+            p2AssetUrl = main.AddPlatformAndQualityToUrl(p2AssetUrl);
+            btP2.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(p2AssetUrl)) as Sprite;
+            btP2.GetComponent<Button>().onClick.AddListener(OnClickP2);
+
+            base.BuildState();
+        }
+        private void OnClickP1()
+        {
+            main.PlayerNumber = 1;
+            main.GoToGame();
+        }
+        private void OnClickP2()
+        {
+            main.PlayerNumber = 2;
+            main.GoToGame();
+        }
     }
 }

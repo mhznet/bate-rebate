@@ -6,22 +6,22 @@ using AquelaFrameWork.Core;
 using AquelaFrameWork.Core.Factory;
 using AquelaFrameWork.Core.State;
 
-
-public class BateStateFactory : IStateFactory {
-
-    public IState CreateStateByID(AState.EGameState newstateID)
+namespace BateRebate
+{
+    public class BateStateFactory : IStateFactory
     {
-        switch( newstateID )
+        public IState CreateStateByID(AState.EGameState newstateID)
         {
-            case AState.EGameState.MENU :
-                return AFObject.Create<BateMenuState>();
-            case AState.EGameState.GAME :
-                return AFObject.Create<BateGameState>();
-            case AState.EGameState.SELECTION :
-                return AFObject.Create<BateSelectionState>();
+            switch (newstateID)
+            {
+                case AState.EGameState.MENU:
+                    return AFObject.Create<BateMenuState>();
+                case AState.EGameState.GAME:
+                    return AFObject.Create<BateGameState>();
+                case AState.EGameState.SELECTION:
+                    return AFObject.Create<BateSelectionState>();
+            }
+            return null;
         }
-
-
-        return null;
     }
 }
