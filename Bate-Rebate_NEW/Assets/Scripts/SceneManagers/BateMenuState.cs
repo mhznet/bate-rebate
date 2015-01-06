@@ -7,6 +7,7 @@ using AquelaFrameWork.Core;
 using AquelaFrameWork.Core.Asset;
 using AquelaFrameWork.Core.Factory;
 using AquelaFrameWork.Core.State;
+using AquelaFrameWork.Sound;
 
 namespace BateRebate
 {
@@ -30,10 +31,26 @@ namespace BateRebate
         {
             m_stateID = EGameState.MENU;
         }
+        private void AddSounds()
+        {
+            AudioClip somAmbiente = Resources.Load<AudioClip>(main.somAmbiente);
+            AudioClip somHitPaddle = Resources.Load<AudioClip>(main.somBallHitPaddle);
+            AudioClip somHitWall = Resources.Load<AudioClip>(main.somBallHitWall);
+            AudioClip somScores = Resources.Load<AudioClip>(main.somPlayerScores);
+            AudioClip somScoresAgainst = Resources.Load<AudioClip>(main.somIAScores);
 
+            AFSoundManager.Instance.Add(main.somAmbiente, somAmbiente, null, 1f, 1f, true);
+            AFSoundManager.Instance.Add(main.somBallHitPaddle, somHitPaddle, null, 1f, 1f, false);
+            AFSoundManager.Instance.Add(main.somBallHitWall, somHitWall, null, 1f, 1f, false);
+            AFSoundManager.Instance.Add(main.somPlayerScores, somScores, null, 1f, 1f, false);
+            AFSoundManager.Instance.Add(main.somIAScores, somScoresAgainst, null, 1f, 1f, false);
+        }
         public override void BuildState()
         {
             main = BateController.Instance;
+            AddSounds();
+
+            main.PlaySound();
             
             bgAssetUrl = main.AddPlatformAndQualityToUrl(bgAssetUrl);
             titleAssetUrl = main.AddPlatformAndQualityToUrl(titleAssetUrl);

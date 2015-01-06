@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using AquelaFrameWork.Sound;
 
 namespace BateRebate
 {
@@ -84,6 +85,36 @@ namespace BateRebate
             }
             rigidbody2D.velocity = vel;
             transform.Rotate(Vector3.forward * -5);
+            PlayCollisionWithPaddleSound();
+        }
+        private void PlayCollisionWithWallSound()
+        {
+            if (BateController.Instance.IsSounding)
+            {
+                AFSoundManager.Instance.Play(BateController.Instance.somBallHitWall);
+            }
+        }
+        private void PlayCollisionWithPaddleSound()
+        {
+            if (BateController.Instance.IsSounding)
+            {
+                AFSoundManager.Instance.Play(BateController.Instance.somBallHitPaddle);
+            }
+        }
+        private void PlayScoreSound(bool leftgoal = false)
+        {
+            if (BateController.Instance.IsSounding)
+            {
+                bool dontcheer = (leftgoal && BateController.Instance.PlayerNumber == 1);
+                if (dontcheer)
+                {
+                    AFSoundManager.Instance.Play(BateController.Instance.somIAScores);
+                }
+                else
+                {
+                    AFSoundManager.Instance.Play(BateController.Instance.somPlayerScores);
+                }
+            }
         }
         void OnCollisionEnter2D(Collision2D col)
         {
@@ -91,27 +122,35 @@ namespace BateRebate
             {
                 if (col.gameObject.name == "paddleLeft")
                 {
+                    PlayCollisionWithPaddleSound();
                     float y = hitFactor(transform.position, col.transform.position, ((BoxCollider2D)col.collider).size.y);
                     Vector2 dir = new Vector2(1, y).normalized;
                     rigidbody2D.velocity = dir * speed;
                 }
                 if (col.gameObject.name == "paddleRight")
                 {
+                    PlayCollisionWithPaddleSound();
                     float y = hitFactor(transform.position, col.transform.position, ((BoxCollider2D)col.collider).size.y);
                     Vector2 dir = new Vector2(-1, y).normalized;
                     rigidbody2D.velocity = dir * speed;
                 }
                 if (col.gameObject.name == "wallR")
                 {
+                    PlayScoreSound();
                     InvokeResetBall();
                     ScorePoint(1);
                     //P1 Scores!
                 }
                 if (col.gameObject.name == "wallL")
                 {
+                    PlayScoreSound(true);
                     InvokeResetBall();
                     ScorePoint(2);
                     //P2 Scores!
+                }
+                if (col.gameObject.name == "wallN" || col.gameObject.name == "wallS")
+                {
+                    PlayCollisionWithWallSound();
                 }
             }
         }

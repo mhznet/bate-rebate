@@ -5,6 +5,7 @@ using System.Collections;
 using AquelaFrameWork.Core.State;
 using AquelaFrameWork.Core.Asset;
 using AquelaFrameWork.Core;
+using AquelaFrameWork.Sound;
 
 namespace BateRebate
 {
@@ -23,7 +24,7 @@ namespace BateRebate
 
         private GameObject pauseScene;
 
-        private string pauseScenePreFabUrl = "preFabs/BatePauseScenePreFab";
+        private string pauseScenePreFabUrl = "preFabs/PreFabPauseScene";
         private string pauseBtnAssetUrl = "Scenes/Game/pausebt";
         private string paddleRightAssetUrl = "Scenes/Game/gamePaddle2";
         private string paddleLeftAssetUrl = "Scenes/Game/gamePaddle";
@@ -46,6 +47,11 @@ namespace BateRebate
         public override void BuildState()
         {
             main = BateController.Instance;
+            
+            main.PlayerNumber = 1;
+            main.IsSounding = true;
+            main.IsPaused = false;
+
             gameScene = Resources.Load<GameObject>("preFabs/PreFabGameScene");
             Instantiate(gameScene);
 
@@ -117,13 +123,16 @@ namespace BateRebate
             bg = new GameObject();
             bg.name = "background";
             bg.AddComponent<SpriteRenderer>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(bgAsset)) as Sprite;
-            /*Debug.Log(GetExtents());
-            Debug.Log(GetPos());*/
             bg.transform.position = new Vector3(0f, 0f, 10);
             Add(bg);
         }
         private void CreateUI()
         {
+            pauseScene = Instantiate(AFAssetManager.Instance.Load<GameObject>(pauseScenePreFabUrl)) as GameObject;
+            pauseScene.name = "pauseTela";
+            pauseScene.AddComponent<BatePauseState>().StartScene(this);
+            pauseScene.SetActive(false);
+
             //TODO!
             scoreLeftOver = GameObject.Find("scoreLeftOver");
             scoreRightOver = GameObject.Find("scoreRightOver");
@@ -135,20 +144,11 @@ namespace BateRebate
             scoreRightOver.GetComponent<Text>().font = typographyofcoop;
             scoreRightOver.GetComponent<Text>().fontSize = 230;
             scoreRightOver.GetComponent<Text>().supportRichText = true;
-            /*Add(scoreLeftOver);
-            Add(scoreRightOver);*/
+
             pauseBtn = GameObject.Find("pausebtn");
             pauseBtn.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(pauseBtnAssetUrl)) as Sprite;
-            pauseBtn.GetComponent<Image>().SetNativeSize();
             pauseBtn.GetComponent<Image>().preserveAspect = true;
-            /*Add(pauseBtn);*/
-            //Debug.Log(pauseBtn.GetComponent<Image>().sprite.bounds.extents.y);
-            //pauseBtn.transform.position = new Vector3(GetPos().x, GetPos().y - GetExtents().y /*+ pauseBtn.GetComponent<Image>().sprite.bounds.extents.y*/,0f);
             pauseBtn.GetComponent<Button>().onClick.AddListener(OnClickPause);
-
-            /*scoreLeftOver.transform.SetParent(main.uiCanvas.transform);
-            scoreRightOver.transform.SetParent(main.uiCanvas.transform);
-            pauseBtn.transform.SetParent(main.uiCanvas.transform);*/
         }
 
         private void CreateBall()
@@ -181,13 +181,10 @@ namespace BateRebate
             touchLeft.transform.localScale = new Vector3(GetExtents().x * 0.7f, GetExtents().y * 2f, 1f);
             touchLeft.transform.position = new Vector3(GetPos().x - GetExtents().x + touchLeft.collider2D.bounds.extents.x, GetPos().y, -9f);
 
-            /*Add(touchRight.AddComponent<PaddleBehaviour>());
-            Add(touchLeft.AddComponent<PaddleBehaviour>());*/
-
-            touchRight.GetComponent<PaddleBehaviour>().enableTouch = (playerNumber == 2);
+            touchRight.AddComponent<PaddleBehaviour>().enableTouch = (playerNumber == 2);
             touchRight.GetComponent<PaddleBehaviour>().paddleAsset = paddleRight;
             touchRight.GetComponent<PaddleBehaviour>().ball = ball;
-            touchLeft.GetComponent<PaddleBehaviour>().enableTouch = true;
+            touchLeft.AddComponent<PaddleBehaviour>().enableTouch = true;
             touchLeft.GetComponent<PaddleBehaviour>().paddleAsset = paddleLeft;
             touchLeft.GetComponent<PaddleBehaviour>().ball = ball;
 
@@ -217,25 +214,26 @@ namespace BateRebate
         }
         public void OnClickPause()
         {
+            Debug.Log("GamePause!");
+            main.IsPaused = !main.IsPaused;
+            pauseBtn.GetComponent<Button>().interactable = !pauseBtn.GetComponent<Button>().interactable;
             ball.GetComponent<BallBehaviour>().Pause();
             touchLeft.GetComponent<PaddleBehaviour>().Pause();
             touchRight.GetComponent<PaddleBehaviour>().Pause();
-
-            /*Application.LoadLevel("sceneName");*/
-            if (AFObject.IsNull(pauseScene))
-            {
-                pauseScene = Instantiate(AFAssetManager.Instance.Load<GameObject>(pauseScenePreFabUrl)) as GameObject;
-            }
-            pauseScene.transform.position = new Vector3(GetPos().x, GetPos().y, 1f);
-            pauseScene.SetActive(true);
+            pauseScene.SetActive(!pauseScene.activeSelf);
+            Invoke("OnClickPause", 3f);
         }
-        public void OnClickUnPause()
+        public void SinglePlayer()
         {
-            ball.GetComponent<BallBehaviour>().Pause();
-            paddleLeft.GetComponent<PaddleBehaviour>().Pause();
-            paddleRight.GetComponent<PaddleBehaviour>().Pause();
-
-            pauseScene.SetActive(false);
+            main.PlayerNumber = 1;
+            this.playerNumber = 1;
+            touchRight.GetComponent<PaddleBehaviour>().enableTouch = false;
+        }
+        public void MultiPlayer()
+        {
+            main.PlayerNumber = 2;
+            this.playerNumber = 2;
+            touchRight.GetComponent<PaddleBehaviour>().enableTouch = true;
         }
     }
 }
