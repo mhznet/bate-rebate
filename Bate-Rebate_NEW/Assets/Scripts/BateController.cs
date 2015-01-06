@@ -9,6 +9,7 @@ namespace BateRebate
 {
     public class BateController : ASingleton<BateController>
     {
+        public bool playSounds = true;
         public string somAmbiente = "Sounds/tema-bate-rebate";
         public string somBallHitWall = "Sounds/ball-hit-wall-bate-rebate";
         public string somBallHitPaddle = "Sounds/ball-hit-paddle-bate-rebate";
@@ -21,12 +22,12 @@ namespace BateRebate
         public void MuteSound() 
         {
             IsSounding = false;
-            AFSoundManager.Instance.Stop(somAmbiente);
+            if (playSounds) AFSoundManager.Instance.Stop(somAmbiente);
         }
         public void PlaySound() 
         {
             IsSounding = true;
-            AFSoundManager.Instance.Play(somAmbiente);
+            if (playSounds) AFSoundManager.Instance.Play(somAmbiente);
         }
         public void GoToMenu()
         {

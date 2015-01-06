@@ -16,7 +16,6 @@ namespace BateRebate
         public GameObject scoreLeftOver;
         public GameObject scoreRightOver;
 
-        public bool paused = false;
         private Vector2 lastVelocity;
 
         public void AwakeBall()
@@ -26,11 +25,18 @@ namespace BateRebate
         }
         public void InvokeResetBall()
         {
-            if (!paused)
+            if (!BateController.Instance.IsPaused)
             {
                 this.gameObject.transform.position = posInit;
                 rigidbody2D.velocity = Vector2.zero.normalized;
                 Invoke("StartBall", timeToLaunch);
+            }
+        }
+        public void CancellBallInvoke()
+        {
+            if (BateController.Instance.IsPaused)
+            {
+                CancelInvoke("StartBall");
             }
         }
         public void ScorePoint(int player)
@@ -46,21 +52,28 @@ namespace BateRebate
                 this.scoreRightOver.GetComponent<Text>().text = pointsRight.ToString();
             }
         }
+        public void ResetScore()
+        {
+            pointsLeft = 0;
+            pointsRight = 0;
+            this.scoreLeftOver.GetComponent<Text>().text = pointsLeft.ToString();
+            this.scoreRightOver.GetComponent<Text>().text = pointsRight.ToString();
+        }
+        public void SaveState()
+        {
+            Debug.Log("SavedState: " + lastVelocity);
+            lastVelocity = rigidbody2D.velocity;
+        }
         public void Pause()
         {
-            if (!paused)
-            {
-                paused = true;
-                lastVelocity = rigidbody2D.velocity;
-                rigidbody2D.velocity = Vector2.zero.normalized;
-            }
-            else
-            {
-                paused = false;
-                rigidbody2D.velocity = lastVelocity;
-            }
+            rigidbody2D.velocity = Vector2.zero.normalized;
         }
-        public void StartBall()
+        public void UnPause()
+        {
+            Debug.Log("LastVel: " + lastVelocity);
+            rigidbody2D.velocity = lastVelocity;
+        }
+        private void StartBall()
         {
             int randomX = Random.Range(0, 4);
             Vector2 vel = Vector2.one.normalized;
@@ -91,14 +104,14 @@ namespace BateRebate
         {
             if (BateController.Instance.IsSounding)
             {
-                AFSoundManager.Instance.Play(BateController.Instance.somBallHitWall);
+                if (BateController.Instance.playSounds) AFSoundManager.Instance.Play(BateController.Instance.somBallHitWall);
             }
         }
         private void PlayCollisionWithPaddleSound()
         {
             if (BateController.Instance.IsSounding)
             {
-                AFSoundManager.Instance.Play(BateController.Instance.somBallHitPaddle);
+                if (BateController.Instance.playSounds) AFSoundManager.Instance.Play(BateController.Instance.somBallHitPaddle);
             }
         }
         private void PlayScoreSound(bool leftgoal = false)
@@ -108,18 +121,22 @@ namespace BateRebate
                 bool dontcheer = (leftgoal && BateController.Instance.PlayerNumber == 1);
                 if (dontcheer)
                 {
-                    AFSoundManager.Instance.Play(BateController.Instance.somIAScores);
+                    if (BateController.Instance.playSounds) AFSoundManager.Instance.Play(BateController.Instance.somIAScores);
                 }
                 else
                 {
-                    AFSoundManager.Instance.Play(BateController.Instance.somPlayerScores);
+                    if (BateController.Instance.playSounds) AFSoundManager.Instance.Play(BateController.Instance.somPlayerScores);
                 }
             }
         }
         void OnCollisionEnter2D(Collision2D col)
         {
-            if (!paused)
+            if (!BateController.Instance.IsPaused)
             {
+                if (rigidbody2D.velocity == Vector2.zero.normalized)
+                {
+                    UnPause();
+                }
                 if (col.gameObject.name == "paddleLeft")
                 {
                     PlayCollisionWithPaddleSound();
@@ -148,10 +165,14 @@ namespace BateRebate
                     ScorePoint(2);
                     //P2 Scores!
                 }
-                if (col.gameObject.name == "wallN" || col.gameObject.name == "wallS")
+                if (col.gameObject.name == "wallU" || col.gameObject.name == "wallD")
                 {
                     PlayCollisionWithWallSound();
                 }
+            }
+            else
+            {
+                Pause();
             }
         }
         float hitFactor(Vector2 ballPos, Vector2 paddlePos, float paddleHeight)

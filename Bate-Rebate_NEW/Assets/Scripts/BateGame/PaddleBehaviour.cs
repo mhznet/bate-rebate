@@ -14,7 +14,6 @@ namespace BateRebate
         private bool isDragging = false;
         private Vector3 padPosInit;
         private float ia_percentage = 0.3f;
-        public bool paused = false;
     
         public void AwakenPaddle() 
         {
@@ -28,14 +27,19 @@ namespace BateRebate
         {
             isDragging = true;
         }
-        public void Pause()
+        public void StopDrag()
         {
             isDragging = false;
-            paused = !paused;
         }
+
+        public void ResetPos()
+        {
+            this.paddleAsset.transform.position = padPosInit;
+        }
+
         public override void AFUpdate(double time)
         {
-            if (!paused)
+            if (!BateController.Instance.IsPaused)
             {
                 if (enableTouch)
                 {

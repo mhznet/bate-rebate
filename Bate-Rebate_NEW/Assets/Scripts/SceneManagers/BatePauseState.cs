@@ -91,7 +91,7 @@ namespace BateRebate
         public void Close()
         {
             Debug.Log("CloseBTN!!!");
-            game.OnClickPause();
+            game.OnClickUnPause();
         }
         public void PlaySound()
         {

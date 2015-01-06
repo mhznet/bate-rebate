@@ -33,12 +33,13 @@ namespace BateRebate
         private string hitBoxAsset = "Scenes/Game/gameHitOk";
 
         private GameObject gameScene;
-        public int playerNumber = 1;
+        public int playerNumber;
         private BateController main;
         private GameObject wallNorth;
         private GameObject wallSouth;
         private GameObject wallRight;
         private GameObject wallLeft;
+        private bool changedPlayerNumber = false;
 
         protected override void Awake()
         {
@@ -47,13 +48,7 @@ namespace BateRebate
         public override void BuildState()
         {
             main = BateController.Instance;
-            
-            main.PlayerNumber = 1;
-            main.IsSounding = true;
-            main.IsPaused = false;
-
-            gameScene = Resources.Load<GameObject>("preFabs/PreFabGameScene");
-            Instantiate(gameScene);
+            gameScene = AFAssetManager.Instance.Instantiate<GameObject>("preFabs/PreFabGameScene");
 
             VerifyScreenRes();
             CreateBackGround();
@@ -65,6 +60,9 @@ namespace BateRebate
             touchLeft.GetComponent<PaddleBehaviour>().AwakenPaddle();
             touchRight.GetComponent<PaddleBehaviour>().AwakenPaddle();
             ball.GetComponent<BallBehaviour>().AwakeBall();
+
+            Add(gameScene);
+
             base.BuildState();
         }
 
@@ -122,18 +120,18 @@ namespace BateRebate
         {
             bg = new GameObject();
             bg.name = "background";
-            bg.AddComponent<SpriteRenderer>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(bgAsset)) as Sprite;
+            bg.AddComponent<SpriteRenderer>().sprite = AFAssetManager.Instance.Instantiate<Sprite>(bgAsset);
             bg.transform.position = new Vector3(0f, 0f, 10);
             Add(bg);
         }
         private void CreateUI()
         {
-            pauseScene = Instantiate(AFAssetManager.Instance.Load<GameObject>(pauseScenePreFabUrl)) as GameObject;
+            pauseScene = AFAssetManager.Instance.Instantiate<GameObject>(pauseScenePreFabUrl);
             pauseScene.name = "pauseTela";
             pauseScene.AddComponent<BatePauseState>().StartScene(this);
             pauseScene.SetActive(false);
+            Add(pauseScene);
 
-            //TODO!
             scoreLeftOver = GameObject.Find("scoreLeftOver");
             scoreRightOver = GameObject.Find("scoreRightOver");
             Font typographyofcoop = Resources.Load<Font>("Fonts/TypographyofCoop-Black");
@@ -146,7 +144,7 @@ namespace BateRebate
             scoreRightOver.GetComponent<Text>().supportRichText = true;
 
             pauseBtn = GameObject.Find("pausebtn");
-            pauseBtn.GetComponent<Image>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(pauseBtnAssetUrl)) as Sprite;
+            pauseBtn.GetComponent<Image>().sprite = AFAssetManager.Instance.Instantiate<Sprite>(pauseBtnAssetUrl);
             pauseBtn.GetComponent<Image>().preserveAspect = true;
             pauseBtn.GetComponent<Button>().onClick.AddListener(OnClickPause);
         }
@@ -155,11 +153,11 @@ namespace BateRebate
         {
             ball = new GameObject();
             ball.name = "ball";
-            ball.AddComponent<SpriteRenderer>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(ballAsset)) as Sprite;
+            ball.AddComponent<SpriteRenderer>().sprite = AFAssetManager.Instance.Instantiate<Sprite>(ballAsset);
             ball.AddComponent<CircleCollider2D>();
             ball.AddComponent<Rigidbody2D>().mass = 0.00001f;
             ball.GetComponent<Rigidbody2D>().gravityScale = 0f;
-            ball.collider2D.sharedMaterial = Instantiate(AFAssetManager.Instance.Load<PhysicsMaterial2D>("Materials/ballMaterial")) as PhysicsMaterial2D;
+            ball.collider2D.sharedMaterial = AFAssetManager.Instance.Instantiate<PhysicsMaterial2D>("Materials/ballMaterial");
             ball.transform.position = new Vector3(GetPos().x, GetPos().y, 0);
             ball.AddComponent<BallBehaviour>();
             ball.GetComponent<BallBehaviour>().scoreLeftOver = scoreLeftOver;
@@ -197,8 +195,8 @@ namespace BateRebate
             paddleLeft = new GameObject();
             paddleRight.name = "paddleRightAsset";
             paddleLeft.name = "paddleLeftAsset";
-            paddleRight.AddComponent<SpriteRenderer>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(paddleRightAssetUrl)) as Sprite;
-            paddleLeft.AddComponent<SpriteRenderer>().sprite = Instantiate(AFAssetManager.Instance.Load<Sprite>(paddleLeftAssetUrl)) as Sprite;
+            paddleRight.AddComponent<SpriteRenderer>().sprite = AFAssetManager.Instance.Instantiate<Sprite>(paddleRightAssetUrl);
+            paddleLeft.AddComponent<SpriteRenderer>().sprite = AFAssetManager.Instance.Instantiate<Sprite>(paddleLeftAssetUrl);
             paddleRight.AddComponent<BoxCollider2D>();
             paddleLeft.AddComponent<BoxCollider2D>();
             paddleRight.AddComponent<Rigidbody2D>().mass = 100000f;
@@ -214,26 +212,51 @@ namespace BateRebate
         }
         public void OnClickPause()
         {
-            Debug.Log("GamePause!");
-            main.IsPaused = !main.IsPaused;
-            pauseBtn.GetComponent<Button>().interactable = !pauseBtn.GetComponent<Button>().interactable;
-            ball.GetComponent<BallBehaviour>().Pause();
-            touchLeft.GetComponent<PaddleBehaviour>().Pause();
-            touchRight.GetComponent<PaddleBehaviour>().Pause();
-            pauseScene.SetActive(!pauseScene.activeSelf);
-            Invoke("OnClickPause", 3f);
+            if (!main.IsPaused)
+            {
+                ball.GetComponent<BallBehaviour>().SaveState();
+                ball.GetComponent<BallBehaviour>().Pause();
+                ball.GetComponent<BallBehaviour>().CancellBallInvoke();
+                touchLeft.GetComponent<PaddleBehaviour>().StopDrag();
+                touchRight.GetComponent<PaddleBehaviour>().StopDrag();
+                pauseScene.SetActive(true);
+                main.IsPaused = true;
+            }
+        }
+        public void OnClickUnPause()
+        {
+            if (main.IsPaused)
+            {
+                main.IsPaused = false;
+                pauseScene.SetActive(false);
+                if (!this.changedPlayerNumber)
+                {
+                    ball.GetComponent<BallBehaviour>().UnPause();
+                }
+                else
+                {
+                    this.changedPlayerNumber = false;
+                    this.touchLeft.GetComponent<PaddleBehaviour>().ResetPos();
+                    this.touchRight.GetComponent<PaddleBehaviour>().ResetPos();
+                    this.ball.GetComponent<BallBehaviour>().InvokeResetBall();
+                }
+            }
         }
         public void SinglePlayer()
         {
             main.PlayerNumber = 1;
             this.playerNumber = 1;
             touchRight.GetComponent<PaddleBehaviour>().enableTouch = false;
+            ball.GetComponent<BallBehaviour>().ResetScore();
+            this.changedPlayerNumber = true;
         }
         public void MultiPlayer()
         {
             main.PlayerNumber = 2;
             this.playerNumber = 2;
             touchRight.GetComponent<PaddleBehaviour>().enableTouch = true;
+            this.changedPlayerNumber = true;
+            ball.GetComponent<BallBehaviour>().ResetScore();
         }
     }
 }

@@ -22,9 +22,9 @@ namespace BateRebate
             //m_stateManager.AddTransition(tras);
             //m_stateManager.GotoState(AState.EGameState.MENU);
 
-            //BateRebateMain.Instance.GetStateManger().GotoState(AState.EGameState.MENU);
+            BateRebateMain.Instance.GetStateManger().GotoState(AState.EGameState.MENU);
             //BateRebateMain.Instance.GetStateManger().GotoState(AState.EGameState.SELECTION);
-            BateRebateMain.Instance.GetStateManger().GotoState(AState.EGameState.GAME);
+            //BateRebateMain.Instance.GetStateManger().GotoState(AState.EGameState.GAME);
 
             base.Initialize();
         }
