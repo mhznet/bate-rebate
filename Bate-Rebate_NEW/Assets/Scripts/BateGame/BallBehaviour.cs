@@ -18,6 +18,13 @@ namespace BateRebate
 
         private Vector2 lastVelocity;
 
+        protected bool m_isStarted = false;
+
+        public bool IsStarted()
+        {
+            return m_isStarted;
+        }
+
         public void AwakeBall()
         {
             posInit = this.gameObject.transform.position;
@@ -25,10 +32,13 @@ namespace BateRebate
         }
         public void InvokeResetBall()
         {
+            m_isStarted = false;
+
             if (!BateController.Instance.IsPaused)
             {
                 this.gameObject.transform.position = posInit;
                 rigidbody2D.velocity = Vector2.zero.normalized;
+                CancelInvoke("StartBall");
                 Invoke("StartBall", timeToLaunch);
             }
         }
@@ -72,33 +82,41 @@ namespace BateRebate
         {
             Debug.Log("LastVel: " + lastVelocity);
             rigidbody2D.velocity = lastVelocity;
+
+            if (!IsStarted())
+                InvokeResetBall();
         }
         private void StartBall()
         {
-            int randomX = Random.Range(0, 4);
-            Vector2 vel = Vector2.one.normalized;
-            switch (randomX)
+            if (!BateController.Instance.IsPaused)
             {
-                case 0:
-                    vel.x *= -speed;
-                    vel.y *= -speed;
-                    break;
-                case 1:
-                    vel.x *= speed;
-                    vel.y *= speed;
-                    break;
-                case 2:
-                    vel.x *= speed;
-                    vel.y *= -speed;
-                    break;
-                case 3:
-                    vel.x *= -speed;
-                    vel.y *= speed;
-                    break;
+                int randomX = Random.Range(0, 4);
+                Vector2 vel = Vector2.one.normalized;
+                switch (randomX)
+                {
+                    case 0:
+                        vel.x *= -speed;
+                        vel.y *= -speed;
+                        break;
+                    case 1:
+                        vel.x *= speed;
+                        vel.y *= speed;
+                        break;
+                    case 2:
+                        vel.x *= speed;
+                        vel.y *= -speed;
+                        break;
+                    case 3:
+                        vel.x *= -speed;
+                        vel.y *= speed;
+                        break;
+                }
+                rigidbody2D.velocity = vel;
+                transform.Rotate(Vector3.forward * -5);
+                PlayCollisionWithPaddleSound();
+
+                m_isStarted = true;
             }
-            rigidbody2D.velocity = vel;
-            transform.Rotate(Vector3.forward * -5);
-            PlayCollisionWithPaddleSound();
         }
         private void PlayCollisionWithWallSound()
         {

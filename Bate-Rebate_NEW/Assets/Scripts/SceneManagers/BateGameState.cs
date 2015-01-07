@@ -49,6 +49,7 @@ namespace BateRebate
         {
             main = BateController.Instance;
             gameScene = AFAssetManager.Instance.Instantiate<GameObject>("preFabs/PreFabGameScene");
+            playerNumber = main.PlayerNumber;
 
             VerifyScreenRes();
             CreateBackGround();
