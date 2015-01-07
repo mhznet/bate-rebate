@@ -33,7 +33,7 @@ namespace BateRebate
         {
             main = BateController.Instance;
 
-            m_selectionScene = AFAssetManager.Instance.Instantiate<GameObject>("preFabs/PreFabSelectionScene");
+            m_selectionScene = AFAssetManager.Instance.Instantiate<GameObject>(AFAssetManager.GetDirectoryOwner("preFabs/PreFabSelectionScene"));
 
             background = GameObject.Find("BG");
             bgAssetUrl = main.AddPlatformAndQualityToUrl(bgAssetUrl);

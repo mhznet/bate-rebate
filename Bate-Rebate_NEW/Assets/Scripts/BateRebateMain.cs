@@ -12,6 +12,10 @@ namespace BateRebate
     {
         public override void Initialize()
         {
+            AFAssetManager.SetDirectoryOwner("BateRebate");
+            AFAssetManager.SimulatedDPI = AFAssetManager.DPI_IPAD_RETINA;
+            AFAssetManager.SimulatePlatform = AFAssetManager.EPlataform.IOS;
+
             m_stateManager = AFObject.Create<AFStateManager>();
             m_stateManager.Initialize(new BateStateFactory());
 

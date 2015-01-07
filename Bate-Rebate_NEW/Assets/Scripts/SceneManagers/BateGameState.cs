@@ -48,7 +48,7 @@ namespace BateRebate
         public override void BuildState()
         {
             main = BateController.Instance;
-            gameScene = AFAssetManager.Instance.Instantiate<GameObject>("preFabs/PreFabGameScene");
+            gameScene = AFAssetManager.Instance.Instantiate<GameObject>(AFAssetManager.GetDirectoryOwner("preFabs/PreFabGameScene"));
             playerNumber = main.PlayerNumber;
 
             VerifyScreenRes();
@@ -127,7 +127,7 @@ namespace BateRebate
         }
         private void CreateUI()
         {
-            pauseScene = AFAssetManager.Instance.Instantiate<GameObject>(pauseScenePreFabUrl);
+            pauseScene = AFAssetManager.Instance.Instantiate<GameObject>(AFAssetManager.GetDirectoryOwner(pauseScenePreFabUrl));
             pauseScene.name = "pauseTela";
             pauseScene.AddComponent<BatePauseState>().StartScene(this);
             pauseScene.SetActive(false);
@@ -135,7 +135,7 @@ namespace BateRebate
 
             scoreLeftOver = GameObject.Find("scoreLeftOver");
             scoreRightOver = GameObject.Find("scoreRightOver");
-            Font typographyofcoop = Resources.Load<Font>("Fonts/TypographyofCoop-Black");
+            Font typographyofcoop = Resources.Load<Font>(AFAssetManager.GetDirectoryOwner("Fonts/TypographyofCoop-Black"));
             scoreLeftOver.GetComponent<Text>().font = typographyofcoop;
             scoreLeftOver.GetComponent<Text>().fontSize = 230;
             scoreLeftOver.GetComponent<Text>().supportRichText = true;
@@ -158,7 +158,7 @@ namespace BateRebate
             ball.AddComponent<CircleCollider2D>();
             ball.AddComponent<Rigidbody2D>().mass = 0.00001f;
             ball.GetComponent<Rigidbody2D>().gravityScale = 0f;
-            ball.collider2D.sharedMaterial = AFAssetManager.Instance.Instantiate<PhysicsMaterial2D>("Materials/ballMaterial");
+            ball.collider2D.sharedMaterial = AFAssetManager.Instance.Instantiate<PhysicsMaterial2D>(AFAssetManager.GetDirectoryOwner("Materials/ballMaterial"));
             ball.transform.position = new Vector3(GetPos().x, GetPos().y, 0);
             ball.AddComponent<BallBehaviour>();
             ball.GetComponent<BallBehaviour>().scoreLeftOver = scoreLeftOver;

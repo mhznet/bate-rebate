@@ -42,7 +42,7 @@ namespace BateRebate
             btJogarAssetUrl = main.AddPlatformAndQualityToUrl(btJogarAssetUrl);
             btVoltarAssetUrl = main.AddPlatformAndQualityToUrl(btVoltarAssetUrl);
             
-            m_menuScene = AFAssetManager.Instance.Instantiate<GameObject>("preFabs/PreFabMenuScene");
+            m_menuScene = AFAssetManager.Instance.Instantiate<GameObject>( AFAssetManager.GetDirectoryOwner("preFabs/PreFabMenuScene") );
 
             background = GameObject.Find("menuBg");
             backgroundTitle = GameObject.Find("menuTitle");
